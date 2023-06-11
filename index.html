@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pokedex</title>
+    <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+    
+    <div class="main">
+        <img class="logo" src="./images/Pokedex_logo - Editado.png" />
+        <div class="box-pokedex">
+            <div class="pokedex">
+                
+            </div>
+        </div>
+
+        <div class="buttons">
+            <button id="menos"><</button>
+            <button id="mais">></button>
+        </div>
+    </div>
+
+    <script>
+        var count = 0;
+
+        var mais = document.getElementById('mais');
+        mais.addEventListener("click", ()=>{
+            if(count < 1155){
+                count = count+1;
+                pokemon(count);
+            }else{
+                alert('Não há mais pokémons.');
+            }
+        })
+
+        var menos = document.getElementById('menos');
+        menos.addEventListener("click", ()=>{
+            if(count===1){
+                alert('Desligando...');
+                count = count - 1;
+            }else if(count===0){
+                alert('Não há como diminuir mais.');
+            }else{
+                count = count - 1;
+                pokemon(count);
+            }
+        })
+
+        function pokemon(num){
+            fetch('https://pokeapi.co/api/v2/pokemon/'+num)
+            .then(response => response.json())
+            .then(thePokemon => {
+                console.log(thePokemon);
+
+                var pokemon = [];
+
+                pokemon.push({types: thePokemon.types, nome: thePokemon.species.name, imagem: thePokemon.sprites.front_default})
+
+                var pokedexBox = document.querySelector('.pokedex');
+                pokedexBox.innerHTML = "";
+                pokedexBox.innerHTML += `
+                    <div class="box-pokemon">
+                        <img src="`+pokemon[0].imagem+`"/>
+                    </div>
+                    <div class="info-pokemon">
+                        <p>Nome: `+pokemon[0].nome+`</p>
+                        <p>Tipo:`+ pokemon[0].types.map(item=>`<span>${item.type.name} </span>`).join('') +`</p>
+                    </div>
+                `
+            })
+        }
+        
+    </script>
+
+</body>
+</html>
